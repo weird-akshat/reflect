@@ -22,23 +22,23 @@ public class TimeEntryMapper {
 
 
     }
-    public static TimeEntry DTOToTimeEntry(TimeEntryDTO timeEntryDTO, Category category){
+    public static TimeEntry dtoToTimeEntry(TimeEntryDTO timeEntryDTO, Category category){
         try{
             return TimeEntry.builder().description(timeEntryDTO.description()).startTime(timeEntryDTO.startTime()).endTime(timeEntryDTO.endTime()).category(category).build();
 
         }
         catch (Exception e){
-            log.error("Error converting TimeEntryDTO to TimeEntry: "+e);
+            log.error("Error converting TimeEntryDTO to TimeEntry ");
             throw new MappingException("Error converting TimeEntryDTO to TimeEntry",e);
         }
 
     }
-    public static TimeEntry DTOToTimeEntry(Long id, TimeEntryDTO timeEntryDTO, Category category) {
+    public static TimeEntry dtoToTimeEntry(Long id, TimeEntryDTO timeEntryDTO, Category category) {
         try{
-            return TimeEntry.builder().description(timeEntryDTO.description()).startTime(timeEntryDTO.startTime()).endTime(timeEntryDTO.endTime()).category(category).build();
+            return TimeEntry.builder().id(id).description(timeEntryDTO.description()).startTime(timeEntryDTO.startTime()).endTime(timeEntryDTO.endTime()).category(category).build();
         }
         catch (Exception e){
-            log.error("Error converting TimeEntryDTO to TimeEntry: "+e);
+            log.error("Error updating TimeEntryDTO to TimeEntry ");
             throw new MappingException("Error converting TimeEntryDTO to TimeEntry",e);
         }
 
