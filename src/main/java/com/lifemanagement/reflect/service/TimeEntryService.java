@@ -27,9 +27,28 @@ public class TimeEntryService {
 
             TimeEntry timeEntry = TimeEntryMapper.dtoToTimeEntry(timeEntryDTO,category.get());
             timeEntryRepo.save(timeEntry);
-            TimeEntryResponseDTO timeEntryResponseDTO = TimeEntryMapper.timeEntryToDTO(timeEntry);
-            return TimeEntryResponseDTO;
+            return TimeEntryMapper.timeEntryToDTO(timeEntry);
 
         }
+        catch (Exception e){
+            throw new RuntimeException("Exception in saving time entry");
+        }
     }
+    public TimeEntryResponseDTO saveTimeEntry(long id,TimeEntryDTO timeEntryDTO){
+        try {
+            Optional<Category> category= categoryRepo.findById(timeEntryDTO.categoryId());
+            if (category.isEmpty()){
+                throw new RuntimeException("Category not found.");
+            }
+
+            TimeEntry timeEntry = TimeEntryMapper.dtoToTimeEntry(id,timeEntryDTO,category.get());
+            timeEntryRepo.save(timeEntry);
+            return TimeEntryMapper.timeEntryToDTO(timeEntry);
+
+        }
+        catch (Exception e){
+            throw new RuntimeException("Exception in saving time entry");
+        }
+    }
+
 }
