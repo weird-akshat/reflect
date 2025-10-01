@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Builder
-@Slf4j
+
 public class TimeEntry {
 
     @Id
