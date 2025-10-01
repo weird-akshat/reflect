@@ -7,10 +7,7 @@ import com.lifemanagement.reflect.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -23,7 +20,20 @@ public class CategoryController {
             return new ResponseEntity<>(categoryService.saveCategory(categoryDTO), HttpStatus.CREATED);
         }
         catch (Exception e){
-            throw new RuntimeException("Error in creating category",e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable long id, @RequestBody CategoryDTO categoryDTO){
+        try {
+            return new ResponseEntity<>(categoryService.saveCategory(id,categoryDTO), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
 }

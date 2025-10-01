@@ -31,5 +31,22 @@ public class TimeEntryController {
 
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TimeEntryResponseDTO> updateTimeEntry(@PathVariable long id, @RequestBody TimeEntryDTO timeEntryDTO){
+        try {
+
+            TimeEntryResponseDTO timeEntryResponseDTO= timeEntryService.saveTimeEntry(id,timeEntryDTO);
+
+            return new ResponseEntity<>(timeEntryResponseDTO,HttpStatus.OK);
+
+
+        }
+        catch (Exception e){
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
 }
