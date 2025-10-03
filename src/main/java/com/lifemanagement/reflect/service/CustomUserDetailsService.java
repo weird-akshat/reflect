@@ -15,6 +15,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AppUserRepo appUserRepo;
     @Override
 
+
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = appUserRepo.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("User not found: "+username));
 
@@ -22,4 +23,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder().username(user.getEmail()).password(user.getPassword()).roles(user.getRole()).build();
 
     }
+
 }

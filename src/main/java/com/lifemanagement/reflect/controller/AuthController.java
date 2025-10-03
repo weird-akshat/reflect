@@ -2,8 +2,10 @@ package com.lifemanagement.reflect.controller;
 
 import com.lifemanagement.reflect.dto.JwtRequest;
 import com.lifemanagement.reflect.dto.JwtResponse;
+import com.lifemanagement.reflect.dto.SignupRequest;
 import com.lifemanagement.reflect.security.JwtHelper;
 
+import com.lifemanagement.reflect.service.AuthSerivce;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +29,16 @@ public class AuthController {
     private final UserDetailsService userDetailsService;
 
 
-    private final AuthenticationManager manager;
+//    private final AuthenticationManager manager;
 
     private final JwtHelper helper;
+    private final AuthSerivce authService;
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
-        log.info("AuthController bean initialized");
 
 
-        this.doAuthenticate(request.getEmail(), request.getPassword());
+
+        authService.doAuthenticate(request.getEmail(), request.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         String token = this.helper.generateToken(userDetails);
         System.out.println("Username: " + request.getEmail());
@@ -52,19 +55,32 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    private void doAuthenticate(String email, String password) {
+    @PostMapping("/signup")
+    public ResponseEntity<JwtResponse> signup(@RequestBody SignupRequest signupRequest){
+            authService.signup(signupRequest.getFullName(), signupRequest.getPassword(),signupRequest.getEmail());
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
-        try {
-            manager.authenticate(authentication);
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
-        }
+            UserDetails userDetails = userDetailsService.loadUserByUsername(signupRequest.getEmail());
+            String token= this.helper.generateToken(userDetails);
+        JwtResponse response = JwtResponse.builder()
+                .jwtToken(token)
+                .username(userDetails.getUsername()).build();
+        System.out.println(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> exception(){
+        return new ResponseEntity<>("Bad Request !!", HttpStatus.BAD_REQUEST);
+
+
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
+    public ResponseEntity<String> exceptionHandler() {
+        return new ResponseEntity<>("Credentials Invalid !!", HttpStatus.UNAUTHORIZED);
     }
 }
 
