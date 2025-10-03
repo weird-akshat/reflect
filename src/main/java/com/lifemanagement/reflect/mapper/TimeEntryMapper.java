@@ -2,10 +2,14 @@ package com.lifemanagement.reflect.mapper;
 
 import com.lifemanagement.reflect.dto.TimeEntryDTO;
 import com.lifemanagement.reflect.dto.TimeEntryResponseDTO;
+import com.lifemanagement.reflect.entity.AppUser;
 import com.lifemanagement.reflect.entity.Category;
 import com.lifemanagement.reflect.entity.TimeEntry;
 import com.lifemanagement.reflect.exception.MappingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Slf4j
 public class TimeEntryMapper {
@@ -22,9 +26,15 @@ public class TimeEntryMapper {
 
 
     }
-    public static TimeEntry dtoToTimeEntry(TimeEntryDTO timeEntryDTO, Category category){
+    public static TimeEntry dtoToTimeEntry(TimeEntryDTO timeEntryDTO, Category category, AppUser user){
         try{
-            return TimeEntry.builder().description(timeEntryDTO.description()).startTime(timeEntryDTO.startTime()).endTime(timeEntryDTO.endTime()).category(category).build();
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object userDetails = authentication.getPrincipal();
+
+
+
+            return TimeEntry.builder().description(timeEntryDTO.description()).startTime(timeEntryDTO.startTime()).endTime(timeEntryDTO.endTime()).category(category).user(user).build();
 
         }
         catch (Exception e){

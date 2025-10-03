@@ -23,6 +23,9 @@ public class TimeEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @ManyToOne
+    @JoinColumn (name="user_id")
+    private AppUser user;
     private String description;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
