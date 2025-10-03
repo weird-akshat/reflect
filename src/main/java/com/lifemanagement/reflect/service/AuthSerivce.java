@@ -32,13 +32,21 @@ public class AuthSerivce {
         try{
             AppUser user = AppUser.builder().fullName(fullName).email(email).password(passwordEncoder.encode(password)).role("USER").build();
 
-            appUserRepo.save(user);
-            try{
-                doAuthenticate(email, password);
+            if (appUserRepo.findByEmail(email).isPresent()){
+                throw new RuntimeException("User already exists");
+
+
             }
-            catch (Exception e){
-                throw  new RuntimeException(""+e);
+            else{
+                appUserRepo.save(user);
+                try{
+                    doAuthenticate(email, password);
+                }
+                catch (Exception e){
+                    throw  new RuntimeException(""+e);
+                }
             }
+
 
         }
         catch (Exception e){
