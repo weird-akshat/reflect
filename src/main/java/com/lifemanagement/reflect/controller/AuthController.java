@@ -37,7 +37,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<JwtResponse> signup(@RequestBody SignupRequest signupRequest){
-            authService.signup(signupRequest.getFullName(), signupRequest.getPassword(),signupRequest.getEmail());
+            authService.signup(signupRequest.getFullName(), signupRequest.getEmail(),signupRequest.getPassword());
             UserDetails userDetails = userDetailsService.loadUserByUsername(signupRequest.getEmail());
             String token= this.helper.generateToken(userDetails);
         JwtResponse response = JwtResponse.builder()
