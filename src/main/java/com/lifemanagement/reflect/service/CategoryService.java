@@ -116,7 +116,6 @@ public class CategoryService {
         if (!(userDetails instanceof  UserDetails)){
             throw new RuntimeException("THE FUCKING FUUUKK");
         }
-
         String email = ((UserDetails) userDetails).getUsername();
 
 
@@ -127,8 +126,8 @@ public class CategoryService {
             categoriesDTOs.add(CategoryMapper.categoryToResponseDTO(category));
         }
         return categoriesDTOs;
-
     }
+
 
 
 }

@@ -139,8 +139,13 @@ public class TimeEntryService {
             throw new RuntimeException("Get List Entry");
         }
 
-
-
+    }
+    public void deleteTimeEntry(Long id){
+        TimeEntry timeEntry = timeEntryRepo.getReferenceById(id);
+        if (timeEntry==null){
+            throw new RuntimeException("Time Entry not found");
+        }
+        timeEntryRepo.delete(timeEntry);
 
 
     }

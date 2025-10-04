@@ -48,4 +48,15 @@ public class TimeEntryController {
         return new ResponseEntity<>(timeEntryService.getListEntries(),HttpStatus.OK);
 
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteTimeEntry(@PathVariable long id){
+
+        try{
+            timeEntryService.deleteTimeEntry(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }
