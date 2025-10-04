@@ -100,6 +100,10 @@ public class CategoryService {
         }
         categoryRepo.delete(category);
 
+    }
+
+    public CategoryResponseDTO getCategory(Long id){
+        return CategoryMapper.categoryToResponseDTO( categoryRepo.findById(id).orElseThrow(()->new RuntimeException("Category not found")));
 
     }
 

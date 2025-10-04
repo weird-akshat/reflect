@@ -2,6 +2,7 @@ package com.lifemanagement.reflect.controller;
 
 import com.lifemanagement.reflect.dto.CategoryDTO;
 import com.lifemanagement.reflect.dto.CategoryResponseDTO;
+import com.lifemanagement.reflect.dto.TimeEntryResponseDTO;
 import com.lifemanagement.reflect.mapper.CategoryMapper;
 import com.lifemanagement.reflect.service.CategoryService;
 import lombok.AllArgsConstructor;
@@ -38,15 +39,19 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteCategory(@PathVariable long id){
         try{
-
             categoryService.deleteCategory(id);
-
-
-
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
         }
         catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> getCategory(@PathVariable long id){
+        try{
+            return new ResponseEntity<>(categoryService.getCategory(id),HttpStatus.OK);
+        }
+        catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
