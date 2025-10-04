@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -59,23 +60,55 @@ public class TimeEntryService {
                 throw new RuntimeException("user details wrong");
             }
 
-
-
         }
         catch (Exception e){
             throw new RuntimeException("Exception in saving time entry");
         }
     }
+    //this is used for updating
     public TimeEntryResponseDTO saveTimeEntry(long id,TimeEntryDTO timeEntryDTO){
         try {
             Optional<Category> category= categoryRepo.findById(timeEntryDTO.categoryId());
             if (category.isEmpty()){
+                log.error("1");
                 throw new RuntimeException("Category not found.");
             }
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            TimeEntry timeEntry = TimeEntryMapper.dtoToTimeEntry(id,timeEntryDTO,category.get());
-            timeEntryRepo.save(timeEntry);
-            return TimeEntryMapper.timeEntryToDTO(timeEntry);
+            Object userDetails= authentication.getPrincipal();
+
+            Optional<TimeEntry> timeEntry= timeEntryRepo.findById(id);
+            if (timeEntry.isEmpty()){
+                log.error("2");
+                throw new RuntimeException("Time Entry not found");
+            }
+
+            if (!(userDetails instanceof UserDetails)){
+
+                log.error("3");
+                throw new RuntimeException("User authorization not giving user details");
+
+
+            }
+            if(!((UserDetails) userDetails).getUsername().equals(timeEntry.get().getUser().getEmail())){
+
+                log.error("4");
+                throw new RuntimeException("Trying to access someone else's resource you naughty naughty");
+            }
+
+            timeEntry.get().setDescription(timeEntryDTO.description());
+            timeEntry.get().setEndTime(timeEntryDTO.endTime());
+            timeEntry.get().setStartTime(timeEntryDTO.startTime());
+            timeEntry.get().setCategory(categoryRepo.findById(timeEntryDTO.categoryId()).orElseThrow(()->new RuntimeException("Category not found")));
+            System.out.println(timeEntry.get());
+            timeEntryRepo.save(timeEntry.get());
+
+            return TimeEntryMapper.timeEntryToDTO(timeEntry.get());
+
+
+
+//
+
 
         }
         catch (Exception e){
