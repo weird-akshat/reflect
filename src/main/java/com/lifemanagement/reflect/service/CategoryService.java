@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -104,6 +105,28 @@ public class CategoryService {
 
     public CategoryResponseDTO getCategory(Long id){
         return CategoryMapper.categoryToResponseDTO( categoryRepo.findById(id).orElseThrow(()->new RuntimeException("Category not found")));
+
+    }
+
+    public List<CategoryResponseDTO> getCategoryList(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Object userDetails= authentication.getPrincipal();
+
+        if (!(userDetails instanceof  UserDetails)){
+            throw new RuntimeException("THE FUCKING FUUUKK");
+        }
+
+        String email = ((UserDetails) userDetails).getUsername();
+
+
+        List<Category> categories= categoryRepo.findByUser(appUserRepo.findByEmail(email).orElseThrow(()->new RuntimeException("User not found")));
+
+        List<CategoryResponseDTO> categoriesDTOs = new ArrayList<>();
+        for (Category category: categories){
+            categoriesDTOs.add(CategoryMapper.categoryToResponseDTO(category));
+        }
+        return categoriesDTOs;
 
     }
 
