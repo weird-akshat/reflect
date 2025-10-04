@@ -4,7 +4,7 @@ import com.lifemanagement.reflect.dto.JwtRequest;
 import com.lifemanagement.reflect.dto.JwtResponse;
 import com.lifemanagement.reflect.dto.SignupRequest;
 import com.lifemanagement.reflect.security.JwtHelper;
-import com.lifemanagement.reflect.service.AuthSerivce;
+import com.lifemanagement.reflect.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final UserDetailsService userDetailsService;
     private final JwtHelper helper;
-    private final AuthSerivce authService;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {

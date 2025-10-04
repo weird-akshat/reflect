@@ -19,14 +19,9 @@ public class TimeEntryController {
 
     @PostMapping
     public ResponseEntity<TimeEntryResponseDTO> createTimeEntry(@RequestBody TimeEntryDTO timeEntryDTO){
-        System.out.println("Issue in timeentryrespons");
 
         try {
-
-
-
             TimeEntryResponseDTO timeEntryResponseDTO= timeEntryService.saveTimeEntry(timeEntryDTO);
-            System.out.println("no issue in timeentryresponse");
             return new ResponseEntity<>(timeEntryResponseDTO,HttpStatus.CREATED);
         }
         catch (Exception e){
@@ -38,7 +33,7 @@ public class TimeEntryController {
         try {
 
             TimeEntryResponseDTO timeEntryResponseDTO= timeEntryService.saveTimeEntry(id,timeEntryDTO);
-            System.out.print("noo");
+
 
             return new ResponseEntity<>(timeEntryResponseDTO,HttpStatus.OK);
         }

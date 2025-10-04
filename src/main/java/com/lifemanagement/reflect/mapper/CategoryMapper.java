@@ -2,6 +2,7 @@ package com.lifemanagement.reflect.mapper;
 
 import com.lifemanagement.reflect.dto.CategoryDTO;
 import com.lifemanagement.reflect.dto.CategoryResponseDTO;
+import com.lifemanagement.reflect.entity.AppUser;
 import com.lifemanagement.reflect.entity.Category;
 import com.lifemanagement.reflect.exception.MappingException;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CategoryMapper {
 
-    public static Category categoryDTOtoCategory(CategoryDTO categoryDTO){
+    public static Category categoryDTOtoCategory(CategoryDTO categoryDTO, AppUser user){
 
         try{
-            return  Category.builder().name(categoryDTO.name()).description(categoryDTO.description()).color(categoryDTO.color()).build();
+            return  Category.builder().name(categoryDTO.name()).description(categoryDTO.description()).color(categoryDTO.color()).user(user).build();
         }
         catch (Exception e){
             log.error("Error in mapping category dto to entity");

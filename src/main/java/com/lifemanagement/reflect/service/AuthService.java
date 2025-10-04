@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class AuthSerivce {
+public class AuthService {
     private final AuthenticationManager manager;
 
     private final PasswordEncoder passwordEncoder;
@@ -34,20 +34,12 @@ public class AuthSerivce {
 
             if (appUserRepo.findByEmail(email).isPresent()){
                 throw new RuntimeException("User already exists");
-
-
             }
             else{
                 appUserRepo.save(user);
-                try{
-                    doAuthenticate(email, password);
-                }
-                catch (Exception e){
-                    throw  new RuntimeException(""+e);
-                }
+
+                doAuthenticate(email, password);
             }
-
-
         }
         catch (Exception e){
             throw new RuntimeException("Exception: "+e);
