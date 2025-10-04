@@ -5,22 +5,25 @@ import com.lifemanagement.reflect.dto.CategoryResponseDTO;
 
 import com.lifemanagement.reflect.entity.AppUser;
 import com.lifemanagement.reflect.entity.Category;
+import com.lifemanagement.reflect.entity.TimeEntry;
 import com.lifemanagement.reflect.mapper.CategoryMapper;
 import com.lifemanagement.reflect.repository.AppUserRepo;
 import com.lifemanagement.reflect.repository.CategoryRepo;
+import com.lifemanagement.reflect.repository.TimeEntryRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
-
+    private final TimeEntryRepo timeEntryRepo;
     private final CategoryRepo categoryRepo;
     private final AppUserRepo appUserRepo;
 
@@ -50,15 +53,11 @@ public class CategoryService {
     }
     public CategoryResponseDTO saveCategory(Long id, CategoryDTO categoryDTO){
         try{
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Category category = CategoryMapper.categoryDTOtoCategory(id,categoryDTO);
             Object userDetails= authentication.getPrincipal();
-
             if (!(userDetails instanceof UserDetails)){
                 throw new RuntimeException("User Details error");
             }
-
             Category category = categoryRepo.findById(id).orElseThrow(()->new RuntimeException("Category not found"));
 
             if(!category.getUser().getEmail().equals(((UserDetails) userDetails).getUsername())){
@@ -77,7 +76,30 @@ public class CategoryService {
         }
     }
 
-    public void DeleteCategory(Long id){
+    public void deleteCategory(Long id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Object userDetails= authentication.getPrincipal();
+        if (!(userDetails instanceof UserDetails)){
+            throw  new RuntimeException("User fucking issue");
+        }
+        String email= ((UserDetails) userDetails).getUsername();
+        Category category = categoryRepo.findById(id).orElseThrow(()->new RuntimeException("category not found"));
+
+        if (!category.getUser().getEmail().equals(email)){
+            throw new RuntimeException("You naughty naughty, trying to access what is not yours");
+        }
+
+
+        List<TimeEntry> timeEntries= timeEntryRepo.findByCategory(category);
+
+        for (TimeEntry timeEntry: timeEntries){
+            timeEntry.setCategory(null);
+
+            timeEntryRepo.save(timeEntry);
+        }
+        categoryRepo.delete(category);
+
 
     }
 

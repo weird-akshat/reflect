@@ -35,5 +35,20 @@ public class CategoryController {
         }
 
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable long id){
+        try{
+
+            categoryService.deleteCategory(id);
+
+
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }
