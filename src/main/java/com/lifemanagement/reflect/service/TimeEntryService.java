@@ -10,9 +10,14 @@ import com.lifemanagement.reflect.mapper.TimeEntryMapper;
 import com.lifemanagement.reflect.repository.AppUserRepo;
 import com.lifemanagement.reflect.repository.CategoryRepo;
 import com.lifemanagement.reflect.repository.TimeEntryRepo;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -148,6 +154,25 @@ public class TimeEntryService {
         timeEntryRepo.delete(timeEntry);
 
 
+
+    }
+    public Page<TimeEntryResponseDTO> getTimeEntries(int page, int size, String sortBy){
+        Pageable pageable = PageRequest.of(page,size, Sort.by(sortBy));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object userDetails = authentication.getPrincipal();
+        if(!(userDetails instanceof UserDetails)){
+            throw  new RuntimeException("Fucking hell bhai");
+        }
+        AppUser user = appUserRepo.findByEmail(((UserDetails) userDetails).getUsername()).orElseThrow(()->new RuntimeException("User not found"));
+
+        Page<TimeEntry> timeEntries= timeEntryRepo.findByUser(user,pageable);
+
+//        List<TimeEntryResponseDTO> timeEntryResponseDTOS = new ArrayList<>();
+
+        Page<TimeEntryResponseDTO> dtos = timeEntries.map(timeEntry -> new TimeEntryResponseDTO(timeEntry.getId(),timeEntry.getDescription(), timeEntry.getStartTime(),timeEntry.getEndTime(),timeEntry.getCategory().getId()));
+
+        return dtos;
     }
 
 }
