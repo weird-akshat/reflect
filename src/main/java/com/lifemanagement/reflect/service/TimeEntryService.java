@@ -170,7 +170,7 @@ public class TimeEntryService {
 
 //        List<TimeEntryResponseDTO> timeEntryResponseDTOS = new ArrayList<>();
 
-        Page<TimeEntryResponseDTO> dtos = timeEntries.map(timeEntry -> new TimeEntryResponseDTO(timeEntry.getId(),timeEntry.getDescription(), timeEntry.getStartTime(),timeEntry.getEndTime(),timeEntry.getCategory().getId()));
+        Page<TimeEntryResponseDTO> dtos = timeEntries.map(timeEntry -> new TimeEntryResponseDTO(timeEntry.getId(),timeEntry.getDescription(), timeEntry.getStartTime(),timeEntry.getEndTime(),timeEntry.getCategory()));
 
         return dtos;
     }

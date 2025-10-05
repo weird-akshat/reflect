@@ -6,15 +6,17 @@ import com.lifemanagement.reflect.entity.TimeEntry;
 import com.lifemanagement.reflect.service.TimeEntryService;
 import lombok.AllArgsConstructor;
 //import org.hibernate.query.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/time-entry")
@@ -79,6 +81,7 @@ public class TimeEntryController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch (Exception e){
+            System.out.println(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
