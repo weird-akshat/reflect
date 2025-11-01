@@ -68,9 +68,10 @@ public class TimeEntryController {
     @GetMapping
     public ResponseEntity<Map<String,Object>> getTimeEntries(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,@RequestParam(defaultValue = "id") String sortBy){
         try{
+            log.info("Entered");
             Page<TimeEntryResponseDTO> timeEntriesPage = timeEntryService.getTimeEntries(page, size, sortBy);
 
-
+            log.info("Get time entries completed");
             Map<String, Object> response = new HashMap<>();
             response.put("entries", timeEntriesPage.getContent());
             response.put("currentPage", timeEntriesPage.getNumber());
