@@ -22,7 +22,7 @@ public class CategoryMapper {
         }
 
     }
-    public static Category categoryDTOtoCategory(Long id,CategoryDTO categoryDTO){
+    public static Category categoryDTOtoCategory(Long id, CategoryDTO categoryDTO){
         try{
             return  Category.builder().id(id).name(categoryDTO.name()).description(categoryDTO.description()).color(categoryDTO.color()).build();
         }
