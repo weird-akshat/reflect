@@ -19,16 +19,11 @@ public class GoalDto {
     private Long id;
     private String name;
     private String description;
-
     private GoalStatus goalStatus;
     private Priority priority;
-
     private LocalDateTime deadline;
     private LocalDateTime completedAt;
-
-
     private Long parentGoalId;
-
 
     private List<Long> childGoalIds;
 }
