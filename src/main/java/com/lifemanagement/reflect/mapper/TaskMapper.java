@@ -15,6 +15,21 @@ public class TaskMapper {
         }
 
         return Task.builder()
+                .title(dto.getTitle())
+                .description(dto.getDescription())
+                .priority(dto.getPriority())
+                .category(category)
+                .createdAt(dto.getCreatedAt())
+                .dueDate(dto.getDueDate())
+                .completed(dto.isCompleted())
+                .build();
+    }
+    public static Task toEntity(TaskDto dto, Category category) {
+        if (dto == null) {
+            return null;
+        }
+
+        return Task.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .description(dto.getDescription())
@@ -26,7 +41,6 @@ public class TaskMapper {
                 .build();
     }
 
-    
     public static TaskDto toDto(Task task) {
         if (task == null) {
             return null;

@@ -34,6 +34,32 @@ public class GoalMapper {
 
         return goal;
     }
+    public static Goal toEntity(GoalDto dto, Goal parentGoal, List<Goal> childGoals) {
+        if (dto == null) {
+            return null;
+        }
+
+        Goal goal = Goal.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .goalStatus(dto.getGoalStatus())
+                .priority(dto.getPriority())
+                .deadline(dto.getDeadline())
+                .completedAt(dto.getCompletedAt())
+                .build();
+
+
+        if (dto.getParentGoalId() != null) {
+            goal.setParentGoal(parentGoal);
+        }
+
+        if (dto.getChildGoalIds() != null) {
+            goal.setChildGoals(childGoals);
+        }
+
+        return goal;
+    }
     public static GoalDto toDto(Goal goal) {
         if (goal == null) {
             return null;
